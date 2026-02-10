@@ -58,7 +58,7 @@ def main():
     # 2. Exécuter les tests avec pytest-json-report + couverture (un seul run)
     print("🧪 Exécution des tests...")
     rc, stdout, stderr = run_command(
-        "python3 -m pytest "
+        "python3 -m pytest -vv -rA "
         "--json-report --json-report-file=report.json "
         "--tb=short "
         "--cov=. --cov-report=term-missing"
@@ -84,6 +84,14 @@ def main():
                 f.write(stderr)
                 f.write("\n```\n")
         print("📝 Rapport Markdown ajouté au résumé GitHub Action.")
+        # Afficher aussi la sortie dans les logs Actions (utile pour debug)
+        if stdout.strip():
+            print("\n--- SORTIE PYTEST / COUVERTURE ---\n")
+            print(stdout)
+        if stderr.strip():
+            print("\n--- STDERR ---\n")
+            print(stderr, file=sys.stderr)
+
     else:
         print("\n--- RAPPORT DE TEST ---\n")
         print(markdown_report)
