@@ -12,8 +12,7 @@ Bienvenue dans ce dépôt d'exercices sur les **tests unitaires procéduraux** e
 ├── INSTRUCTIONS.md                    # Instructions générales
 ├── .github/
 │   └── workflows/                     # Tests automatisés (CI/CD)
-├── seance_0/                          # Culture Générale des Tests
-│   ├── README.md
+├── │   ├── README.md
 │   ├── exercice_1_pourquoi_tester.py
 │   ├── exercice_2_types_tests.py
 │   ├── exercice_3_assertions.py
@@ -41,7 +40,7 @@ Bienvenue dans ce dépôt d'exercices sur les **tests unitaires procéduraux** e
 
 ## 🎯 Objectifs
 
-### Séance 0 : Culture Générale des Tests
+###  : Culture Générale des Tests
 Comprendre les fondamentaux des tests et pourquoi ils sont essentiels :
 - Pourquoi tester ?
 - Types de tests (unitaires, intégration, etc.)
@@ -77,8 +76,7 @@ cd github_classroom_unittest
 
 ### 2. Naviguer vers une Séance
 ```bash
-cd seance_0  # ou seance_1, seance_2
-```
+cd ```
 
 ### 3. Résoudre les Exercices
 Chaque fichier d'exercice contient :
@@ -89,8 +87,7 @@ Chaque fichier d'exercice contient :
 
 ### 4. Tester votre Code
 ```bash
-python3 -m pytest seance_0/ -v
-```
+python3 -m pytest ```
 
 > 🔎 **Note (important)**
 >
@@ -106,7 +103,7 @@ python3 -m pytest -v
 
 ---
 
-## 📋 Exercices Séance 0 (Culture Générale)
+## 📋 Exercices  (Culture Générale)
 
 | # | Exercice | Concepts Clés |
 |---|----------|---------------|
@@ -146,7 +143,7 @@ python3 -m pytest -v
 
 ## 💡 Conseils pour Réussir
 
-1. **Commencez par Séance 0** : Comprenez la philosophie avant la pratique.
+1. **Commencez par ** : Comprenez la philosophie avant la pratique.
 
 2. **Progressez graduellement** : Séance 1 avant Séance 2.
 
@@ -185,19 +182,17 @@ python3 -m pytest -v
 
 1. Créez une branche pour votre travail :
    ```bash
-   git checkout -b solution/seance-0
-   ```
+   git checkout -b solution/   ```
 
 2. Complétez les exercices et committez :
    ```bash
    git add .
-   git commit -m "Complétez les exercices Séance 0"
+   git commit -m "Complétez les exercices "
    ```
 
 3. Poussez votre branche :
    ```bash
-   git push origin solution/seance-0
-   ```
+   git push origin solution/   ```
 
 4. Créez une Pull Request sur GitHub
 

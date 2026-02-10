@@ -1,10 +1,10 @@
-name: Tests Automatisés avec Feedback Riche
+name: Tests
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "**" ]
+    branches: ["**"]
   workflow_dispatch:
 
 jobs:
@@ -27,4 +27,5 @@ jobs:
       run: python3 github_action_wrapper.py
       env:
         PYTHONPATH: ${{ github.workspace }}
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
