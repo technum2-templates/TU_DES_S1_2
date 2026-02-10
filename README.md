@@ -37,3 +37,18 @@ Bienvenue dans ce dépôt d'exercices. L'objectif est de compléter une série d
 
 ---
 *Note : Toutes les références aux anciennes séances S0, S1 et S2 ont été supprimées pour simplifier votre parcours.*
+
+## Autograding par exercice (recommandé)
+
+Pour éviter que GitHub Actions exécute des tests d'exercices que vous n'avez pas encore faits :
+
+1) Créez une branche nommée **`exoX`** (exemples : `exo1`, `exo2`, ..., `exo12`)
+2) Travaillez et *push* sur cette branche.
+
+➡️ La CI détecte automatiquement `exoX` et n'exécute **que** le test correspondant.
+
+Exemples :
+- branche `exo3` → exécute `seance_unique/test_exercice_3.py`
+- branche `exo11` → exécute `seance_unique/test_exercice_11.py`
+
+Si vous restez sur `main`, la CI peut exécuter l'ensemble des tests.

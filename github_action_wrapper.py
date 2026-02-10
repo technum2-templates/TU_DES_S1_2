@@ -1,86 +1,114 @@
 #!/usr/bin/env python3
-"""GitHub Actions test wrapper - Séance Unique (12 exercices).
+"""GitHub Classroom autograding wrapper (séance unique).
 
-- Exécute pytest sur tous les exercices.
-- Génère un résumé Markdown pour GitHub Actions.
-- Fournit des retours constructifs en cas d'échec.
+Objectif: exécuter les tests **par exercice** sans créer 12 templates.
+
+✅ Convention de branche recommandée :
+- `exo1`, `exo2`, ..., `exo12`
+
+Sélection des tests (ordre de priorité) :
+1) Variable d'env EXO (ex: EXO=3)
+2) Nom de branche contenant `exoX`
+3) Sinon : exécute tout
+
+Ce wrapper :
+- lance pytest en mode verbeux (logs visibles dans Actions)
+- écrit un petit résumé dans le Job Summary (si disponible)
 """
 
+from __future__ import annotations
+
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
+
+
+SEANCE_DIR = Path("seance_unique")
+
 
 def write_summary(md: str) -> None:
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not summary_path:
-        print("\n--- RÉSUMÉ DES TESTS ---\n")
-        print(md)
         return
     try:
         with open(summary_path, "a", encoding="utf-8") as f:
             f.write(md + "\n")
     except Exception:
+        # Ne pas faire échouer la CI juste pour ça.
         pass
 
+
+def parse_exo(value: str) -> Optional[int]:
+    if not value:
+        return None
+    v = value.strip().lower()
+    # accepte "3", "03", "exo3", "exo03"
+    m = re.search(r"(?:^|\b)(?:exo)?\s*0*(\d{1,2})(?:\b|$)", v)
+    if not m:
+        return None
+    n = int(m.group(1))
+    return n if 1 <= n <= 12 else None
+
+
+def parse_exo_from_branch(branch: str) -> Optional[int]:
+    if not branch:
+        return None
+    b = branch.lower()
+    m = re.search(r"(?:^|/|\b)exo\s*0*(\d{1,2})(?:\b|$)", b)
+    if not m:
+        return None
+    n = int(m.group(1))
+    return n if 1 <= n <= 12 else None
+
+
 def main() -> int:
-    target = "seance_unique"
-    
-    if not Path(target).exists():
-        msg = f"❌ Dossier '{target}' introuvable. Assurez-vous que la structure du dépôt est correcte."
+    branch = (os.getenv("BRANCH_NAME") or "").strip()
+    exo = parse_exo(os.getenv("EXO") or "") or parse_exo_from_branch(branch)
+
+    if not SEANCE_DIR.exists():
+        msg = f"❌ Dossier introuvable: `{SEANCE_DIR}`"
         print(msg, file=sys.stderr)
         write_summary("## Autograding\n\n" + msg)
         return 2
 
-    # Exécution de pytest
-    # -vv: très verbeux
-    # -rA: affiche le résumé de tous les tests (passés et échoués)
-    # --tb=short: trace d'erreur courte pour plus de clarté
-    cmd = ["pytest", "-vv", "-rA", "--tb=short", target]
-    print(f"Exécution des tests dans: {target}")
-    
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    rc = proc.returncode
-    stdout = proc.stdout
-    stderr = proc.stderr
+    cmd = ["pytest", "-vv", "-rA", "--maxfail=1"]
+    target_label = "tous les exercices"
 
-    # Affichage de la sortie pour les logs GitHub
-    print(stdout)
-    if stderr:
-        print(stderr, file=sys.stderr)
-
-    # Construction du résumé
-    status = "✅ Tous les exercices sont réussis !" if rc == 0 else "❌ Certains exercices nécessitent encore du travail."
-    
-    summary = [
-        "## 🎓 Rapport d'Autograding",
-        f"**Résultat global**: {status}",
-        "\n### Détails des exercices\n",
-        "| Exercice | Statut |",
-        "| :--- | :--- |"
-    ]
-
-    # Analyse rapide des résultats pour le tableau
-    for i in range(1, 13):
-        if f"test_exercice_{i}.py" in stdout:
-            # On cherche si le test spécifique a échoué
-            # Pytest affiche "FAILED seance_unique/test_exercice_X.py"
-            if f"FAILED seance_unique/test_exercice_{i}.py" in stdout:
-                summary.append(f"| Exercice {i} | ❌ Échec |")
+    if exo is not None:
+        # On suppose que les tests suivent la convention : test_exercice_<n>.py
+        test_path = SEANCE_DIR / f"test_exercice_{exo}.py"
+        if not test_path.exists():
+            # fallback si tests rangés dans sous-dossier tests/
+            alt = SEANCE_DIR / "tests" / f"test_exercice_{exo}.py"
+            if alt.exists():
+                test_path = alt
             else:
-                summary.append(f"| Exercice {i} | ✅ Réussi |")
-        else:
-            summary.append(f"| Exercice {i} | ❓ Non exécuté |")
+                msg = f"❌ Test introuvable pour exo {exo}: `{test_path}`"
+                print(msg, file=sys.stderr)
+                write_summary("## Autograding\n\n" + msg)
+                return 2
 
-    if rc != 0:
-        summary.append("\n### 💡 Conseils pour corriger")
-        summary.append("1. Lisez attentivement le message d'erreur ci-dessus.")
-        summary.append("2. Vérifiez que vos fonctions portent exactement le nom demandé.")
-        summary.append("3. Assurez-vous de ne pas avoir modifié la structure des fichiers de test.")
-        summary.append("4. Vous pouvez lancer les tests localement avec la commande `pytest`.")
+        cmd.append(str(test_path))
+        target_label = f"exo{exo} → `{test_path}`"
+    else:
+        cmd.append(str(SEANCE_DIR))
 
-    write_summary("\n".join(summary))
+    print("Running:", " ".join(cmd))
+    proc = subprocess.run(cmd, text=True)
+    rc = proc.returncode
+
+    status = "✅ Succès" if rc == 0 else f"❌ Échec (code {rc})"
+    write_summary(
+        "## Autograding\n\n"
+        f"**Branche**: `{branch or 'n/a'}`\n\n"
+        f"**Cible**: {target_label}\n\n"
+        f"**Résultat**: {status}\n"
+    )
     return rc
 
+
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

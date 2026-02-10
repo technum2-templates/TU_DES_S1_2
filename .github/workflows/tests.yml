@@ -1,4 +1,4 @@
-name: Tests
+name: Autograding
 
 on:
   push:
@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ["**"]
   workflow_dispatch:
+    inputs:
+                  EXO: ${{ inputs.EXO || '' }}
+        required: false
+        default: ""
 
 jobs:
   test:
@@ -27,5 +31,5 @@ jobs:
       run: python3 github_action_wrapper.py
       env:
         PYTHONPATH: ${{ github.workspace }}
-        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+                    BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
