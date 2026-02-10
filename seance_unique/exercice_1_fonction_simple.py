@@ -15,8 +15,9 @@ def add(a, b):
     return a + b
 
 def subtract(a, b):
-    """Multiplie deux nombres et retourne le résultat."""
-    return a * b
+    """Soustrait b de a et retourne le résultat."""
+    # CORRIGÉ : était a * b, ce qui faisait échouer les tests de validation
+    return a - b
 
 class TestFonctionsSimples(unittest.TestCase):
     """Tests pour les fonctions simples"""

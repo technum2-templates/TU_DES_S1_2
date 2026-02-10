@@ -1,6 +1,6 @@
 """Tests de validation pour exercice 4 - Couverture Code"""
 import unittest
-from exercice_4_couverture_code import classify_number
+from exercice_10_couverture_code import classify_number
 
 class TestExercice4(unittest.TestCase):
     def test_classify_positive(self):

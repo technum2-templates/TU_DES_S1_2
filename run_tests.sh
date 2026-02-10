@@ -1,37 +1,35 @@
 #!/bin/bash
 
-# Script wrapper pour exécuter les tests avec feedback progressif
-# Usage: ./run_tests.sh [seance_1|seance_2] [exercice_number]
+echo "---------------------------------------------------"
+echo "🚀 Lancement de la vérification des exercices..."
+echo "---------------------------------------------------"
 
-export PYTHONPATH=$PYTHONPATH:.
+# 1. Vérification de la structure
+python3 check_exercises.py
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ La structure de vos fichiers n'est pas correcte."
+    echo "Vérifiez les messages ci-dessus avant de continuer."
+    exit 1
+fi
 
-# Couleurs
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+# 2. Exécution des tests avec pytest
+echo ""
+echo "✅ Structure validée. Exécution des tests unitaires..."
+echo ""
 
-echo -e "${BLUE}=== Runner de Tests GitHub Classroom ===${NC}"
+pytest seance_unique/ --tb=short -v
 
-if [ -z "$1" ]; then
-    echo "Exécution de tous les tests..."
-    python3 -m pytest seance_1/ seance_2/
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "---------------------------------------------------"
+    echo "🎉 Félicitations ! Tous les tests sont passés."
+    echo "N'oubliez pas de commit et push votre travail."
+    echo "---------------------------------------------------"
 else
-    SESSION=$1
-    if [ -z "$2" ]; then
-        echo -e "Exécution des tests pour ${GREEN}${SESSION}${NC}..."
-        # Trouver tous les fichiers de test dans la séance
-        for test_file in ${SESSION}/test_exercice_*.py; do
-            echo -e "\n${BLUE}--- Test: $(basename $test_file) ---${NC}"
-            python3 $test_file
-        done
-    else
-        EXERCICE=$2
-        TEST_FILE="${SESSION}/test_exercice_${EXERCICE}.py"
-        if [ -f "$TEST_FILE" ]; then
-            echo -e "Exécution du test ${GREEN}${TEST_FILE}${NC}..."
-            python3 $TEST_FILE
-        else
-            echo "Erreur: Fichier $TEST_FILE non trouvé."
-        fi
-    fi
+    echo ""
+    echo "---------------------------------------------------"
+    echo "❌ Certains tests ont échoué."
+    echo "Analysez les erreurs ci-dessus pour corriger votre code."
+    echo "---------------------------------------------------"
 fi

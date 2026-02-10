@@ -1,8 +1,8 @@
 """Tests de validation pour exercice 1 - Setup/Teardown"""
 import unittest
-from exercice_1_setup_teardown import Calculator
+from exercice_7_setup_teardown import Calculator
 
-class TestExercice1(unittest.TestCase):
+class TestExercice7(unittest.TestCase):
     def setUp(self):
         self.calc = Calculator()
     

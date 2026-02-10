@@ -1,6 +1,6 @@
 """Tests de validation pour exercice 5 - TDD Simple"""
 import unittest
-from exercice_5_tdd_simple import BankAccount
+from exercice_11_tdd_simple import BankAccount
 
 class TestExercice5(unittest.TestCase):
     def setUp(self):

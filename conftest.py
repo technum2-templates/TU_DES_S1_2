@@ -6,7 +6,11 @@ import pytest
 
 
 def pytest_configure(config):
-    """Configuration initiale de pytest"""    config.addinivalue_line(
+    """Configuration initiale de pytest"""
+    config.addinivalue_line(
+        "markers", "seance0: marque les tests de la Séance 0"
+    )
+    config.addinivalue_line(
         "markers", "seance1: marque les tests de la Séance 1"
     )
     config.addinivalue_line(

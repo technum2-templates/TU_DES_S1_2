@@ -6,54 +6,52 @@ def check_imports():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, base_dir)
     
-    sessions = ['seance_1', 'seance_2']
+    session_dir = os.path.join(base_dir, 'seance_unique')
     issues = []
     
-    for session in sessions:
-        session_dir = os.path.join(base_dir, session)
-        if not os.path.exists(session_dir):
-            continue
+    if not os.path.exists(session_dir):
+        return ["Dossier 'seance_unique' manquant."]
             
-        test_files = [f for f in os.listdir(session_dir) if f.startswith('test_exercice_')]
-        for test_file in test_files:
-            test_path = os.path.join(session_dir, test_file)
-            # Lire le fichier de test pour voir ce qu'il essaie d'importer
-            with open(test_path, 'r') as f:
-                content = f.read()
+    test_files = sorted([f for f in os.listdir(session_dir) if f.startswith('test_exercice_')], 
+                       key=lambda x: int(x.split('_')[-1].split('.')[0]))
+    
+    for test_file in test_files:
+        test_path = os.path.join(session_dir, test_file)
+        with open(test_path, 'r') as f:
+            content = f.read()
+            
+        import_lines = [line for line in content.split('\n') if 'from exercice_' in line and 'import' in line]
+        for line in import_lines:
+            try:
+                parts = line.split('import')
+                module_part = parts[0].replace('from', '').strip()
+                functions_part = parts[1].strip()
+                functions = [f.strip() for f in functions_part.split(',')]
                 
-            # Chercher les imports de type "from exercice_X import ..."
-            import_lines = [line for line in content.split('\n') if 'from exercice_' in line and 'import' in line]
-            for line in import_lines:
-                try:
-                    # Extraire le nom du module et les fonctions
-                    parts = line.split('import')
-                    module_part = parts[0].replace('from', '').strip()
-                    functions_part = parts[1].strip()
-                    functions = [f.strip() for f in functions_part.split(',')]
+                module_path = os.path.join(session_dir, f"{module_part}.py")
+                if not os.path.exists(module_path):
+                    issues.append(f"Fichier manquant: {module_part}.py (requis par {test_file})")
+                    continue
                     
-                    # Tenter d'importer le module
-                    module_path = os.path.join(session_dir, f"{module_part}.py")
-                    if not os.path.exists(module_path):
-                        issues.append(f"Fichier manquant: {module_path}")
-                        continue
-                        
-                    spec = importlib.util.spec_from_file_location(module_part, module_path)
-                    module = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(module)
-                    
-                    for func in functions:
-                        if not hasattr(module, func):
-                            issues.append(f"Fonction '{func}' manquante dans {module_part}.py (demandée par {test_file})")
-                except Exception as e:
-                    issues.append(f"Erreur lors de l'analyse de {test_file}: {str(e)}")
-                    
+                spec = importlib.util.spec_from_file_location(module_part, module_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                
+                for func in functions:
+                    if not hasattr(module, func):
+                        issues.append(f"Fonction '{func}' manquante dans {module_part}.py")
+            except Exception as e:
+                issues.append(f"Erreur dans {test_file}: {str(e)}")
+                
     return issues
 
 if __name__ == "__main__":
     problems = check_imports()
     if problems:
-        print("Problèmes détectés :")
+        print("❌ Problèmes détectés :")
         for p in problems:
-            print(f"- {p}")
+            print(f"  - {p}")
+        sys.exit(1)
     else:
-        print("Aucun problème d'importation majeur détecté entre les tests et les exercices.")
+        print("✅ Structure des exercices valide (12/12).")
+        sys.exit(0)

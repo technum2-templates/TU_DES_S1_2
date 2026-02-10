@@ -1,6 +1,6 @@
 """Tests de validation pour exercice 6 - TDD Complexe"""
 import unittest
-from exercice_6_tdd_complexe import ShoppingCart
+from exercice_12_tdd_complexe import ShoppingCart
 
 class TestExercice6(unittest.TestCase):
     def setUp(self):
