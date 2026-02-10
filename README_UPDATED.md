@@ -1,0 +1,38 @@
+# GitHub Classroom Unittest - Mise à jour
+
+Ce projet a été mis à jour pour inclure un système de feedback progressif et une intégration GitHub Actions améliorée.
+
+## 🚀 Nouveautés
+
+1.  **`github_action_wrapper.py`** : Un wrapper Python qui exécute les tests et génère un rapport Markdown détaillé directement dans le résumé de votre exécution GitHub Action (`GITHUB_STEP_SUMMARY`).
+2.  **`run_tests.sh`** : Un script shell pour exécuter les tests localement avec le même feedback progressif.
+3.  **Workflow GitHub Actions optimisé** : Situé dans `.github/workflows/tests.yml`, il utilise désormais le wrapper pour un affichage clair des résultats.
+
+## 💻 Utilisation Locale
+
+Pour exécuter les tests localement avec feedback :
+
+```bash
+# Donner les permissions d'exécution
+chmod +x run_tests.sh
+
+# Exécuter tous les tests
+./run_tests.sh
+
+# Exécuter les tests d'une séance spécifique
+./run_tests.sh seance_1
+
+# Exécuter un exercice spécifique
+./run_tests.sh seance_1 1
+```
+
+## 🤖 GitHub Actions
+
+Le workflow se déclenche automatiquement à chaque `push`. Vous verrez un résumé détaillé dans l'onglet **Actions** de votre dépôt GitHub, incluant :
+- Le nombre de tests réussis/échoués.
+- Les messages d'erreur détaillés avec indices progressifs.
+- Le rapport de couverture de code.
+
+## ⚠️ Note sur les Imports
+
+Assurez-vous que les noms des fonctions dans vos fichiers d'exercices (ex: `exercice_1_fonction_simple.py`) correspondent exactement à ceux attendus par les tests (ex: `add` et `subtract`). Actuellement, certains fichiers d'exercices utilisent des noms différents (ex: `ajouter` au lieu de `add`), ce qui causera l'échec des tests.
