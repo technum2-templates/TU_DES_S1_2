@@ -16,7 +16,7 @@ def add(a, b):
 
 def subtract(a, b):
     """Soustrait b de a et retourne le résultat."""
-    # CORRIGÉ : était a * b, ce qui faisait échouer les tests de validation
+  
     return a - b
 
 class TestFonctionsSimples(unittest.TestCase):
@@ -34,15 +34,15 @@ class TestFonctionsSimples(unittest.TestCase):
         """TODO: Tester l'addition avec zéro"""
         pass
     
-    def test_multiplier_positifs(self):
+    def test_soustraire_negatifs(self):
         """TODO: Tester la multiplication de deux nombres positifs"""
         pass
     
-    def test_multiplier_par_zero(self):
+    def test_soustraire_positifs(self):
         """TODO: Tester la multiplication par zéro"""
         pass
     
-    def test_multiplier_negatifs(self):
+    def test_soustraire_zero(self):
         """TODO: Tester la multiplication avec des nombres négatifs"""
         pass
 

@@ -52,3 +52,53 @@ Exemples :
 - branche `exo11` → exécute `seance_unique/test_exercice_11.py`
 
 Si vous restez sur `main`, la CI peut exécuter l'ensemble des tests.
+
+## Démarrage rapide (étudiant)
+
+### 1) Cloner et créer une branche par exercice
+Travaillez **sur une branche nommée** `exoX` (où X = 1..12).
+
+Exemples :
+- `exo1` pour l'exercice 1
+- `exo7` pour l'exercice 7
+- `exo12` pour l'exercice 12
+
+```bash
+git checkout -b exo3
+```
+
+### 2) Installer l'environnement
+```bash
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
+# Windows (PowerShell)
+# .venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+```
+
+### 3) Lancer les tests en local
+Pour ne lancer **que** les tests de votre exercice :
+```bash
+pytest seance_unique/test_exercice_3.py -vv
+```
+
+Pour lancer tous les tests :
+```bash
+pytest -vv
+```
+
+### 4) Commit & push (déclenche l'autograding)
+```bash
+git add .
+git commit -m "Exo 3 - première version"
+git push -u origin exo3
+```
+
+➡️ GitHub Actions détecte automatiquement `exo3` et n'exécute **que** `test_exercice_3.py`.
+
+### 5) Voir le résultat sur GitHub
+- Onglet **Actions** → dernier run
+- Puis **Summary** + logs du job
+

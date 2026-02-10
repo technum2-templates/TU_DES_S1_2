@@ -1,7 +1,8 @@
 """Tests optimisés pour exercice 1 - Fonction Simple"""
 import unittest
 import sys
-sys.path.insert(0, '..')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from test_utils import OptimizedTestCase, TestReporter
 
 class TestExercice1(OptimizedTestCase):
