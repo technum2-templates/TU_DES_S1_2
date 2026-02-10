@@ -57,7 +57,6 @@ class TestFonction(unittest.TestCase):
         # TODO: Complétez ce test
         pass
 
-
 if __name__ == "__main__":
     unittest.main()
 ```
@@ -95,8 +94,8 @@ Si les tests échouent, revoyez votre logique de test.
 ### Étape 6 : Valider
 Une fois satisfait, committez votre solution :
 ```bash
-git add seance_0/exercice_1_*.py
-git commit -m "Complétez exercice 1 Séance 0"
+git add seance_1/exercice_1_*.py
+git commit -m "Complétez exercice 1 Séance 1"
 ```
 
 ---
@@ -105,12 +104,12 @@ git commit -m "Complétez exercice 1 Séance 0"
 
 ### Test d'un Exercice Spécifique
 ```bash
-python3 seance_0/exercice_1_pourquoi_tester.py
+python3 seance_1/exercice_1_pourquoi_tester.py
 ```
 
 ### Test de Tous les Exercices d'une Séance
 ```bash
-python3 -m pytest seance_0/ -v
+python3 -m pytest seance_1/ -v
 ```
 
 ### Test de Tous les Exercices
@@ -170,11 +169,6 @@ def tearDown(self):
 ---
 
 ## 📊 Progression Recommandée
-
-### Semaine 1 : Séance 0 (Culture Générale)
-1. Lisez les 5 exercices
-2. Répondez aux questions conceptuelles
-3. Comprenez la philosophie des tests
 
 ### Semaine 2 : Séance 1 (Introduction)
 1. Complétez les exercices 1-3 (fonctions simples)
@@ -341,8 +335,8 @@ A:
 2. Consultez les corrigés (mais essayez d'abord !)
 3. Demandez à votre professeur
 
-**Q: Dois-je compléter Séance 0 avant Séance 1 ?**
-A: Oui, les concepts de Séance 0 sont fondamentaux pour les autres séances.
+**Q: Dois-je compléter Séance 1 avant Séance 1 ?**
+A: Oui, les concepts de Séance 1 sont fondamentaux pour les autres séances.
 
 ---
 
@@ -357,3 +351,18 @@ Pour toute question :
 ---
 
 **Bonne chance ! 🚀**
+
+## Autograding par exercice (sans 12 templates)
+
+Pour éviter que GitHub Actions vous parle d'exercices que vous n'avez pas encore faits, **travaillez sur une branche nommée** :
+
+- `exo01`, `exo02`, ..., `exo12` (ou `exo-03`, `ex_7`, `exercice12`, etc.)
+
+👉 La CI détecte automatiquement le numéro dans le nom de la branche et n'exécute **que** le test correspondant.
+
+Exemples :
+- branche `exo03` → exécute `seance_1/test_exercice_3.py`
+- branche `exo11` → exécute `seance_2/test_exercice_5.py`
+
+Si votre branche s'appelle `seance_1` ou `seance_2`, la CI exécute toute la séance (6 exercices).
+Sinon, par défaut, elle exécute tout (S1+S2).

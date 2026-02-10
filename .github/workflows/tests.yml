@@ -6,7 +6,11 @@ on:
   pull_request:
     branches: ["**"]
   workflow_dispatch:
-
+    inputs:
+      EXO:
+        description: 'Exercice à corriger (01..12). Laisser vide pour auto-détection via branche.'
+        required: false
+        default: ''
 jobs:
   test:
     runs-on: ubuntu-latest
